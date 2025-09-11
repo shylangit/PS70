@@ -13,6 +13,9 @@ body {
 p {font-size: 16px;}
 .margin {margin-bottom: 30px;}
 
+li {font-size: 16px;
+    margin-bottom: 10px;}
+
 a {
   color: #000000;
 }
