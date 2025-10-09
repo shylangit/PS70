@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+</head>
 
 <title>PS70: Intro to Digital Fabrication </title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="../style.css" rel="stylesheet">
 
-
-<nav class="navbar navbar-expand-sm navbar-dark" style=" color: #EEE7E8;">
+<nav class="navbar navbar-expand-sm navbar-" style="background-color: #dcdcdc; color: #000000;">
   <div style="align-items: center; justify-content: center;" class="container-fluid">
     <div class="d-flex w-100">
-      <h3 class="nav-name me-auto"> Shyla Nguyen</h3>
+      <h4 class="nav-name me-auto"> Shyla Nguyen</h4>
       <h2 class="nav-title position-absolute start-50 translate-middle-x">PS70 Fall 2025</h2>
     </div>
     <div class="navbar-nav">
@@ -27,6 +29,61 @@
 <h3>Week 5: 3D Design & Printing</h3>
 
 <h4>Assignment: Model and 3D print something</h4>
+
+<p>This week, were assigned to model and 3D print something. My original idea was to print out little jumping frogs, like these: </p>
+<img src="plastic_frogs.jpeg" style="width:250px" />
+
+<p>After modeling my design on Fusion, I printed my first iteration. Ultimately, the legs were too thin and would break off while
+  I tried to remove the support material. Additionally, the tab used to push down would not bend as needed.
+</p>
+<p>I ended up going through a few iterations before I switched ideas. After these iterations, I realized PLA is probably not
+  the best material for this design. If I really had to try to make it work though, I would probably scale the design up 
+  more and attempt to design a better hinge that can bend and (hopefully) generate the kinetic energy needed to make the frog
+  jump.
+ </p>
+  <model-viewer src="frog.glb"
+            alt="Fusion 360 model"
+            camera-controls
+            auto-rotate
+            style="width: 600px; height: 400px;">
+  </model-viewer>
+  <a download href='./frog.stl'> Frog STL </a>
+  <p class="margin"> </p>
+
+  <img src="frog_iterations.jpg" style="width:250px" />
+
+  <p> I went through a couple of iterations varying the thickness of the legs and body of the frog.</p>
+
+<p>Impulsive pivot: </p>
+<p>Eventually, I decided to pivot to attempt to make an articulate design. I was interested in designing something that had 
+  some movment capability. I landed on making a chain-link PIP dratini. 
+</p>
+<img src="dratini_v1.jpg" style="width:250px" />
+
+<p> This model turned out to be more of a proof-of-concept. The CADing can definitely be improved on and some
+  paint would certainly help! I would like to look into better using t-splines as well to get more organic
+  shapes for the design. The model does articulate though!
+</p>
+
+<a download href='./dratini.stl'> Dratini STL </a>
+<p class="margin"> </p>
+
+<h4>3D Scan</h4>
+<model-viewer src="shyla_cat_scan.glb" 
+              camera-controls 
+              auto-rotate 
+              style="width: 500px; height: 400px;">
+</model-viewer>
+<a download href='./shyla_cat_scan.stl'> Cat Figure STL </a>
+<model-viewer src="shyla_dinosaur_scan.glb" 
+              camera-controls 
+              auto-rotate 
+              style="width: 500px; height: 400px;">
+</model-viewer>
+<a download href='./shyla_dinosaur_scan.stl'> Dinosaur Figure STL </a>
+
+<p> Original Figures: </p>
+<img src="cat_dino.jpg" style="width:250px" />
 
 
 </div>
