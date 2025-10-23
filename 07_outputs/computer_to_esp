@@ -1,0 +1,187 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QLineEdit, QTextEdit
+from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QFont
+import serial
+import serial.tools.list_ports
+
+class RemoteControl(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.serial_connection = None
+        self.current_command = "STOP"
+        self.init_ui()
+        
+    def init_ui(self):
+        self.setWindowTitle("Remote Controller")
+        self.setGeometry(100, 100, 600, 500)
+        
+        # Central widget
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+        main_layout = QVBoxLayout(central_widget)
+        
+        # Title
+        title = QLabel("Remote Controller")
+        title.setFont(QFont("Arial", 18, QFont.Bold))
+        title.setAlignment(Qt.AlignCenter)
+        main_layout.addWidget(title)
+        
+        # Serial connection section
+        connection_layout = QHBoxLayout()
+        connection_layout.addWidget(QLabel("Port:"))
+        self.port_input = QLineEdit()
+        connection_layout.addWidget(self.port_input)
+        
+        self.connect_btn = QPushButton("Connect")
+        self.connect_btn.clicked.connect(self.toggle_connection)
+        self.connect_btn.setStyleSheet("background-color: #2ba2fc; color: white; font-weight: bold; padding: 8px; border-radius: 4px;")
+        connection_layout.addWidget(self.connect_btn)
+        
+        self.scan_btn = QPushButton("Scan Ports")
+        self.scan_btn.clicked.connect(self.scan_ports)
+        self.scan_btn.setStyleSheet("background-color: #54d158; color: white; font-weight: bold; padding: 8px; border-radius: 4px;")
+        connection_layout.addWidget(self.scan_btn)
+        
+        main_layout.addLayout(connection_layout)
+        
+        # Status display
+        self.status_label = QLabel("Status: Disconnected")
+        self.status_label.setFont(QFont("Arial", 12))
+        self.status_label.setStyleSheet("padding: 10px; background-color: #ffcccc; border-radius: 5px;")
+        main_layout.addWidget(self.status_label)
+        
+        # Command display
+        self.command_label = QLabel("Current Command: STOP")
+        self.command_label.setFont(QFont("Arial", 14, QFont.Bold))
+        self.command_label.setAlignment(Qt.AlignCenter)
+        self.command_label.setStyleSheet("padding: 20px; background-color: #ffcccc; border-radius: 5px; margin: 10px;")
+        main_layout.addWidget(self.command_label)
+        
+        # Control instructions
+        instructions = QLabel(
+            "Controls:\n"
+            "W / ↑ : Forward\n"
+            "S / ↓ : Backward\n"
+            "A / ← : Left\n"
+            "D / → : Right\n"
+            "Space : Stop"
+        )
+        instructions.setFont(QFont("Arial", 11))
+        instructions.setAlignment(Qt.AlignCenter)
+        instructions.setStyleSheet("padding: 15px; background-color: #ffcccc; border-radius: 5px; margin: 10px;")
+        main_layout.addWidget(instructions)
+        
+        # Log area
+        main_layout.addWidget(QLabel("Command Log:"))
+        self.log_area = QTextEdit()
+        self.log_area.setReadOnly(True)
+        self.log_area.setMaximumHeight(120)
+        main_layout.addWidget(self.log_area)
+        
+        self.log("Application started. Connect to ESP32 to begin.")
+        
+    def scan_ports(self):
+        """Scan and display available serial ports"""
+        ports = serial.tools.list_ports.comports()
+        if ports:
+            port_list = "\n".join([f"{p.device} - {p.description}" for p in ports])
+            self.log(f"Available ports:\n{port_list}")
+        else:
+            self.log("No ports found")
+    
+    def toggle_connection(self):
+        """Connect or disconnect from ESP32"""
+        if self.serial_connection and self.serial_connection.is_open:
+            self.disconnect()
+        else:
+            self.connect()
+    
+    def connect(self):
+        """Establish serial connection to ESP32"""
+        port = self.port_input.text().strip()
+        if not port:
+            self.log("Error: Please enter a serial port")
+            return
+        
+        try: # Connect with ESP32
+            self.serial_connection = serial.Serial(port, 115200, timeout=1)
+            self.status_label.setText(f"Status: Connected to {port}")
+            self.status_label.setStyleSheet("padding: 10px; background-color: #9dcf9d; border-radius: 5px;")
+            self.connect_btn.setText("Disconnect")
+            self.log(f"Connected to {port}")
+        except Exception as e:
+            self.log(f"Connection error: {str(e)}")
+            self.status_label.setText("Status: Connection Failed")
+            self.status_label.setStyleSheet("padding: 10px; background-color: #ffcccc; border-radius: 5px;")
+    
+    def disconnect(self):
+        """Close serial connection"""
+        if self.serial_connection:
+            self.serial_connection.close()
+            self.serial_connection = None
+        self.status_label.setText("Status: Disconnected")
+        self.status_label.setStyleSheet("padding: 10px; background-color: #ffcccc; border-radius: 5px;")
+        self.connect_btn.setText("Connect")
+        self.log("Disconnected from ESP32")
+    
+    def send_command(self, command):
+        """Send command to ESP32 via serial"""
+        if self.serial_connection and self.serial_connection.is_open:
+            try:
+                self.serial_connection.write(f"{command}\n".encode())
+                self.current_command = command
+                self.command_label.setText(f"Current Command: {command}")
+                self.log(f"Sent: {command}")
+            except Exception as e:
+                self.log(f"Send error: {str(e)}")
+        else:
+            self.log("Not connected to ESP32")
+    
+    def log(self, message):
+        """Add message to log"""
+        self.log_area.append(message)
+        # Auto-scrolls to bottom
+        scrollbar = self.log_area.verticalScrollBar()
+        scrollbar.setValue(scrollbar.maximum())
+    
+
+    def keyPressEvent(self, event):
+        """Handle keyboard input"""
+        key = event.key()
+        
+        # WASD and Arrow key controls
+        if key in (Qt.Key_W, Qt.Key_Up):
+            self.send_command("FORWARD")
+        elif key in (Qt.Key_S, Qt.Key_Down):
+            self.send_command("BACKWARD")
+        elif key in (Qt.Key_A, Qt.Key_Left):
+            self.send_command("LEFT")
+        elif key in (Qt.Key_D, Qt.Key_Right):
+            self.send_command("RIGHT")
+        elif key == Qt.Key_Space:
+            self.send_command("STOP")
+    
+    def keyReleaseEvent(self, event):
+        """Handle key release - stop the car when key is released"""
+        if event.isAutoRepeat():
+            return
+        
+        key = event.key()
+        if key in (Qt.Key_W, Qt.Key_Up, Qt.Key_S, Qt.Key_Down, 
+                   Qt.Key_A, Qt.Key_Left, Qt.Key_D, Qt.Key_Right):
+            self.send_command("STOP")
+    
+    def closeEvent(self, event):
+        """Clean up when closing the application"""
+        self.disconnect()
+        event.accept()
+
+def main():
+    app = QApplication(sys.argv)
+    controller = RemoteControl()
+    controller.show()
+    sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    main()
