@@ -5,11 +5,10 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="../style.css" rel="stylesheet">
 
-
-<nav class="navbar navbar-expand-sm navbar-ligh" style=" color: #000000;">
+<nav class="navbar navbar-expand-sm navbar-" style="background-color: #dcdcdc; color: #000000;">
   <div style="align-items: center; justify-content: center;" class="container-fluid">
     <div class="d-flex w-100">
-      <h3 class="nav-name me-auto"> Shyla Nguyen</h3>
+      <h4 class="nav-name me-auto"> Shyla Nguyen</h4>
       <h2 class="nav-title position-absolute start-50 translate-middle-x">PS70 Fall 2025</h2>
     </div>
     <div class="navbar-nav">
@@ -24,8 +23,43 @@
 <div class="textcontainer">
 <p class="margin"></p>
 
-<h3>Final Project: [INSERT FINAL PROJECT HERE]</h3>
+<h3>Final Project: Moving Table </h3>
+<h4>Progress: </h4>
+<p>Since getting the table prototype built and moving, I've added two new features to the table. </p>
+<ol>
+  <li>Camera</li>
+  <p> The first thing I added to the table was a live camera feed. I used the ESP32 CAM and set up the live feed 
+    via web server. The device streaming the feed must be connected to the same Wifi server as the ESP32. Now,
+    we can see where the table is moving and control it out of our line of sight.
+  </p>
+  <li>Updated Controls</li>
+  <p> Previously, the table was controlled by WASD keyboard input. While this was a good star to get things moving, 
+    this control system would force you to bring your laptop with you if you wanted to use the table. This would 
+    kinda defeat the point of the table since you wouldn't be able to keep your hands free.
+  </p>
+  <p> After networking week, I realized I could use the MPU-6050 gyro/accelerometer to control the movement of the
+    table. This way, the table could really "follow" you without needing a literal remote control. To implement the 
+    new control system, I adapted our gyro code for turret head movement to instead translate gyro tilt data into
+    movement instructions for the motors (forward, backward, left, right). This way, I only had to update the controller
+    ESP32 code.
+  </p>
+  <p> Now, when you tilt the gyro, the table will move accordingly (tilt forward, move forward, etc.)</p>
+</ol>
 
+<img src="table_p2.jpg" alt="table p2" style="width:500px" /> 
+
+<h4>Next steps:</h4>
+<p>In my next iteration of my final project, I would like to implement the following features:</p>
+<ul>
+  <li>Speed control using the accelerometer - adjust the speed of the table based on the acceleration recorded
+    by the accelerometer on the MPU-6050.
+  </li>
+  <li>Wearable control - attach the MPU-6050 to something like a glove or bracelet that can be worn on the arm
+    so that the table can really follow the user around.
+  </li>
+  <li>Cleaner web server - customize the web server UI that is streaming the live feed from the ESP32 cam.</li>
+  <li>Add. features - other fun features for the table. Looking for suggestions! </li>
+</ul>
 
 </div>
 </xmp>
