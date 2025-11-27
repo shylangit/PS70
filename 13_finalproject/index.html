@@ -26,6 +26,10 @@
 <h3>Final Project: Moving Table </h3>
 <h4>Progress: </h4>
 <p>Since getting the table prototype built and moving, I've added two new features to the table. </p>
+
+<img src="table_p2.jpg" alt="table p2" style="width:500px" /> 
+<p class="margin"> </p>
+
 <ol>
   <li>Camera</li>
   <p> The first thing I added to the table was a live camera feed. I used the ESP32 CAM and set up the live feed 
@@ -46,7 +50,23 @@
   <p> Now, when you tilt the gyro, the table will move accordingly (tilt forward, move forward, etc.)</p>
 </ol>
 
-<img src="table_p2.jpg" alt="table p2" style="width:500px" /> 
+<a href="gyro_controller.ino" download="gyro_controller.ino">Gyro Controller Code</a>
+<p class="margin"> </p>
+
+<video controls width="400">
+  <source src="table_tilt_control.mp4" type="video/mp4">
+</video>
+
+<video controls width="400">
+  <source src="table_cam.mp4" type="video/mp4">
+</video>
+
+<h4>Debugging:</h4>
+<p>I'm still having an issue with one of the wheels refusing to move, even after individually replacing each piece
+  of hardware and checking the software. I'll have to take a look at it again. Also, I somehow managed to flip the 
+  directionality of left/right tilt orientation, but that should be a quick fix.
+</p>
+
 
 <h4>Next steps:</h4>
 <p>In my next iteration of my final project, I would like to implement the following features:</p>
