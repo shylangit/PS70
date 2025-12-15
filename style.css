@@ -124,3 +124,20 @@ code {
 #aboutme {
   padding: 20px;
 }
+
+pre code {
+    background: #cfcccc !important; 
+    color: #000000 !important; 
+    display: block;
+    padding: 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+    font-family: "Fira Code", Consolas, monospace;
+    overflow-x: auto;
+    white-space: pre;
+}
+pre {
+    margin: 10px 0;
+}
+
